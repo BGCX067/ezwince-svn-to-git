@@ -1,0 +1,83 @@
+#labels ezwince,win32,pocketpc,minimal,ezFrameWnd
+什么是ezWinCE
+
+ezWinCE是一个基于Win32 API的专注于WinCE程序开发的框架，他采用类似于MFC的类库结构，对Win32进行简单的封装，采用C# Delegate机制实现消息映射。
+
+  ezWinCE使用于对系统内存和运行速度要求严格的用户。您即可以使用C++运行时的高效，又无需忍受Win32 API的繁琐和MFC的混乱。
+
+  ezWinCE开用LGPL协议开源。项目地址：http://code.google.com/p/ezwince/
+  SVN源码库地址： svn checkout http://ezwince.googlecode.com/svn/trunk/
+
+最小化的ezWinCE程序 Minimal ：
+
+#include "ezWindows.h"
+
+
+//创建一个窗口类
+class MinimalMainWnd : public ezFrameWnd
+
+{
+
+public:
+
+	MinimalMainWnd()
+	{
+
+		//添加窗口销毁时的事件处理
+
+		AddDestroyEventHandler(this, (WM_DESTROY_EVENT_HANDLER)&MinimalMainWnd::OnDestroy);	
+
+		//添加WM_PAINT的事件处理
+
+		AddPaintEventHandler(this,(WM_PAINT_EVENT_HANDLER)&MinimalMainWnd::OnPaint);
+
+	}
+
+
+private:
+
+	void OnDestroy(ezObject *sender)
+	{
+		
+		PostQuitMessage(0);
+
+	}
+	void OnPaint(ezObject *sender, ezWMPaintArg *paintArgs)
+	{
+
+		::DrawText(paintArgs->m_hDC,TEXT("Hi, I'm here!\0"),13,&ezRect(10,10,200,200), 0);
+
+	}
+
+};
+
+int WINAPI WinMain(HINSTANCE hInstance,
+	       HINSTANCE hPrevInstance,
+	       LPTSTR    lpCmdLine,
+	       int       nCmdShow)
+{
+ 	// TODO: Place code here.
+	
+	Application.Init(hInstance, hPrevInstance, lpCmdLine);
+
+
+	MinimalMainWnd mainForm;
+
+	
+	mainForm.Create(TEXT("ezWindows MINIMAL"),TEXT("ezWindows MINIMAL"),
+		WS_VISIBLE, ezRect(CW_USEDEFAULT, 0, CW_USEDEFAULT, 0), NULL, 0);
+
+	
+	mainForm.Show();
+	
+	mainForm.Update();
+
+
+	Application.Run(mainForm);
+
+
+	return 0;
+
+}
+
+  
